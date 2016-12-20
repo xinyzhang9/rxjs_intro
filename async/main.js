@@ -19,19 +19,34 @@ responseStream.subscribe(response => {
 	console.log(response);
 })
 
+// ----u---------u->
+// startWith(null)
+// N---u----------->
+// -------N----N--->
+//	merge
+// N---u--N----N-u->
 function createSuggestionStream(responseStream){
 	return responseStream.map(listUser => 
 		listUser[Math.floor(Math.random()*listUser.length)]
-	);
+	).startWith(null)
+	.merge(refreshClickStream.map(ev => null));
 }
 
-function renderSuggestion(userData, selector){
-	let element = document.querySelector(selector);
-	let usernameEl = element.querySelector('.username');
-	usernameEl.href = userData.html_url;
-	usernameEl.textContent = userData.login;
-	let imgEl = element.querySelector('img');
-	imgEl.src = userData.avatar_url;
+//rendering users
+function renderSuggestion(suggestedUser, selector){
+	let suggestionEl = document.querySelector(selector);
+	if(suggestedUser === null){
+		suggestionEl.style.visibility = 'hidden';
+	}else{
+		suggestionEl.style.visibility = 'visible';
+		let usernameEl = suggestionEl.querySelector('.username');
+		usernameEl.href = suggestedUser.html_url;
+		usernameEl.textContent = suggestedUser.login;
+		let imgEl = suggestionEl.querySelector('img');
+		imgEl.src = "";
+		imgEl.src = suggestedUser.avatar_url;
+	}
+	
 }
 let suggestion1Stream = createSuggestionStream(responseStream);
 let suggestion2Stream = createSuggestionStream(responseStream);
