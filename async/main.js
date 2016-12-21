@@ -11,13 +11,12 @@ let requestOnRefreshStream = refreshClickStream
 							return 'https://api.github.com/users?since'+randomOffset;
 						})
 
-let responseStream = requestOnRefreshStream.merge(startupRequestStream)
-						.flatMap(requestURL => Rx.Observable.fromPromise(jQuery.getJSON(requestURL))
-						);
-
-responseStream.subscribe(response => {
-	console.log(response);
-})
+let responseStream = startupRequestStream.merge(requestOnRefreshStream)
+						.flatMap(requestURL => {
+							console.log('do network request');
+							return Rx.Observable.fromPromise(jQuery.getJSON(requestURL));
+						})
+						.shareReplay(1);
 
 // ----u---------u->
 // startWith(null)
@@ -31,6 +30,10 @@ function createSuggestionStream(responseStream){
 	).startWith(null)
 	.merge(refreshClickStream.map(ev => null));
 }
+
+let suggestion1Stream = createSuggestionStream(responseStream);
+let suggestion2Stream = createSuggestionStream(responseStream);
+let suggestion3Stream = createSuggestionStream(responseStream);
 
 //rendering users
 function renderSuggestion(suggestedUser, selector){
@@ -48,9 +51,6 @@ function renderSuggestion(suggestedUser, selector){
 	}
 	
 }
-let suggestion1Stream = createSuggestionStream(responseStream);
-let suggestion2Stream = createSuggestionStream(responseStream);
-let suggestion3Stream = createSuggestionStream(responseStream);
 
 suggestion1Stream.subscribe(user => {
 	renderSuggestion(user,'.suggestion1');
