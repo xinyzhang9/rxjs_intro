@@ -1,4 +1,4 @@
-
+// variables 
 let refreshButton = document.querySelector('.refresh');
 
 let refreshClickStream = Rx.Observable.fromEvent(refreshButton,'click');
