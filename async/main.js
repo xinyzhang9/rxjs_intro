@@ -28,12 +28,12 @@ let responseStream = startupRequestStream.merge(requestOnRefreshStream)
 						})
 						.shareReplay(1);
 
-// ----u---------u->
-// startWith(null)
-// N---u----------->
-// -------N----N--->
-//	merge
-// N---u--N----N-u->
+// refreshClickStream -----f------------------>
+// requestStream      r----r------------------>
+// responseStream     --R-------R------------->
+// closeClickStream   ------------------x----->
+//                    ------------------u----->
+// suggestion1Stream  N-u--N----u-------u----->
 
 function getRandomUser(listUsers){
 	return listUsers[Math.floor(Math.random()*listUsers.length)];
