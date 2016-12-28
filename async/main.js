@@ -69,6 +69,7 @@ function renderSuggestion(suggestedUser, selector){
 	
 }
 
+// subscribe
 suggestion1Stream.subscribe(user => {
 	renderSuggestion(user,'.suggestion1');
 })
