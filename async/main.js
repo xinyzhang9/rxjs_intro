@@ -1,7 +1,17 @@
-// variables 
-let refreshButton = document.querySelector('.refresh');
 
+// DOMs
+let refreshButton = document.querySelector('.refresh');
+let closeButton1 = document.querySelector('.close1');
+let closeButton2 = document.querySelector('.close2');
+let closeButton3 = document.querySelector('.close3');
+
+// Streams
 let refreshClickStream = Rx.Observable.fromEvent(refreshButton,'click');
+let close1Clicks = Rx.Observable.fromEvent(closeButton1,'click');
+let close2Clicks = Rx.Observable.fromEvent(closeButton2,'click');
+let close3Clicks = Rx.Observable.fromEvent(closeButton3,'click');
+
+
 
 let startupRequestStream = Rx.Observable.just('https://api.github.com/users');
 
@@ -24,16 +34,23 @@ let responseStream = startupRequestStream.merge(requestOnRefreshStream)
 // -------N----N--->
 //	merge
 // N---u--N----N-u->
-function createSuggestionStream(responseStream){
-	return responseStream.map(listUser => 
-		listUser[Math.floor(Math.random()*listUser.length)]
-	).startWith(null)
-	.merge(refreshClickStream.map(ev => null));
+
+function getRandomUser(listUsers){
+	return listUsers[Math.floor(Math.random()*listUsers.length)];
 }
 
-let suggestion1Stream = createSuggestionStream(responseStream);
-let suggestion2Stream = createSuggestionStream(responseStream);
-let suggestion3Stream = createSuggestionStream(responseStream);
+function createSuggestionStream(responseStream, closeClickStream){
+	return responseStream.map(getRandomUser)
+	.startWith(null)
+	.merge(refreshClickStream.map(ev => null))
+	.merge(
+		closeClickStream.withLatestFrom(responseStream,(x,R)=> getRandomUser(R))
+	);
+}
+
+let suggestion1Stream = createSuggestionStream(responseStream, close1Clicks);
+let suggestion2Stream = createSuggestionStream(responseStream, close2Clicks);
+let suggestion3Stream = createSuggestionStream(responseStream, close3Clicks);
 
 //rendering users
 function renderSuggestion(suggestedUser, selector){
