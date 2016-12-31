@@ -6,6 +6,7 @@
 
 // console.log(foo.call());
 
+// producer determine when the values are sent
 // var bar = Rx.Observable.create(function(observer){
 // 	console.log('hello');
 // 	observer.next(42);
@@ -33,6 +34,7 @@ function* baz(){
 	yield 200;
 }
 
+// consumer determine when the values are sent
 var iterator = baz();
 console.log(iterator.next().value);
 console.log(iterator.next().value);
