@@ -1,4 +1,4 @@
-var foo = Rx.Observable.interval(1000);
+var foo = Rx.Observable.interval(100).take(5);
 /*
 
 foo: --0----1----2----3---
@@ -7,7 +7,7 @@ bar: --0----2----4----6---
 */
 
 
-var bar = foo.filter(x => x % 2 === 0)
+var bar = foo.last()
 
 
 bar.subscribe(
