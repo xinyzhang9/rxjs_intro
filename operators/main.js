@@ -6,22 +6,9 @@ foo: --0----1----2----3---
 bar: --0----2----4----6---
 */
 
-// function calculate(transformationFn){
-// 	var source = this;
-// 	var result = Rx.Observable.create(function subscribe(observer){
-// 		source.subscribe(
-// 			function(x){ observer.next(transformationFn(x)); },
-// 			function(err){ observer.error(err); },
-// 			function(){ observer.complete(); }
-// 		);
-// 	});
-// 	return result;
-// }
 
+var bar = foo.filter(x => x % 2 === 0)
 
-// Rx.Observable.prototype.calculate = calculate;
-
-var bar = foo.map(x => x * 2);
 
 bar.subscribe(
 	function(x){ console.log('next '+x); },
