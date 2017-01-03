@@ -6,21 +6,22 @@ foo: --0----1----2----3---
 bar: --0----2----4----6---
 */
 
-function multipleBy(multiplier){
-	var source = this;
-	var result = Rx.Observable.create(function subscribe(observer){
-		source.subscribe(
-			function(x){ observer.next(x * multiplier); },
-			function(err){ observer.error(err); },
-			function(){ observer.complete(); }
-		);
-	});
-	return result;
-}
+// function calculate(transformationFn){
+// 	var source = this;
+// 	var result = Rx.Observable.create(function subscribe(observer){
+// 		source.subscribe(
+// 			function(x){ observer.next(transformationFn(x)); },
+// 			function(err){ observer.error(err); },
+// 			function(){ observer.complete(); }
+// 		);
+// 	});
+// 	return result;
+// }
 
-Rx.Observable.prototype.multipleBy = multipleBy;
 
-var bar = foo.multipleBy(100);
+// Rx.Observable.prototype.calculate = calculate;
+
+var bar = foo.map(x => x * 2);
 
 bar.subscribe(
 	function(x){ console.log('next '+x); },
