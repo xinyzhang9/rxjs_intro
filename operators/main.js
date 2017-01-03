@@ -1,4 +1,10 @@
-var foo = Rx.Observable.of(1,2,3,4,5);
+var foo = Rx.Observable.interval(1000);
+/*
+
+foo: --0----1----2----3---
+		multiplyBy(2)
+bar: --0----2----4----6---
+*/
 
 function multipleBy(multiplier){
 	var source = this;
