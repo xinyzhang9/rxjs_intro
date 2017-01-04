@@ -1,16 +1,14 @@
-var foo = Rx.Observable.interval(100).take(5);
+var foo = Rx.Observable.interval(500).take(4);
+var bar = Rx.Observable.interval(300).take(5);
+
 /*
 
-foo: --0----1----2----3---
-		multiplyBy(2)
-bar: --0----2----4----6---
 */
 
 
-var bar = foo.last()
+var merged = Rx.Observable.merge(foo,bar);
 
-
-bar.subscribe(
+merged.subscribe(
 	function(x){ console.log('next '+x); },
 	function(err){ console.log('error '+err); },
 	function(x){ console.log('done'); }
