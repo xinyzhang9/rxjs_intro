@@ -1,14 +1,11 @@
-var foo = Rx.Observable.interval(500).take(5)
-	.zip(Rx.Observable.of('H','e','l','l','o'),(_,c) => c);
-
-var bar = Rx.Observable.interval(300).take(7)
-	.zip(Rx.Observable.of(0,1,0,1,0,1,0),(_,x) => x);
+var foo = Rx.Observable.interval(500).take(5);
+var bar = Rx.Observable.interval(400).take(4);
 
 /*
 
 */
 
-var combined = foo.withLatestFrom(bar,(c,n)=>n===1?c.toUpperCase():c.toLowerCase());
+var combined = foo.zip(bar,(x,y)=>x+y);
 
 combined.subscribe(
 	function(x){ console.log('next '+x); },
