@@ -1,17 +1,16 @@
-var weight = Rx.Observable.interval(500).take(5);
-var height = Rx.Observable.interval(500).take(5);
+var foo = Rx.Observable.interval(500).take(5)
+	.zip(Rx.Observable.of('H','e','l','l','o'),(_,c) => c);
+
+var bar = Rx.Observable.interval(300).take(7)
+	.zip(Rx.Observable.of(0,1,0,1,0,1,0),(_,x) => x);
 
 /*
-----0----1----2----(3|)
---0--1--2--3--(4|)
-	combineLatest((x,y)=> x+y) (AND style)
-----01--23-4--(56)-(7|)	
+
 */
 
+var combined = foo.withLatestFrom(bar,(c,n)=>n===1?c.toUpperCase():c.toLowerCase());
 
-var bmi = weight.combineLatest(height,(w,h) => w * h);
-
-bmi.subscribe(
+combined.subscribe(
 	function(x){ console.log('next '+x); },
 	function(err){ console.log('error '+err); },
 	function(x){ console.log('done'); }
