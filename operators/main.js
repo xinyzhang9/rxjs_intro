@@ -1,15 +1,18 @@
-var foo = Rx.Observable.interval(500).take(5);
+var foo = Rx.Observable.interval(500).take(5)
+	.zip(Rx.Observable.of('a','b','a','a','b'), (x,y)=>y);
 /*
 
----0---1---2---3---4|
-	debounceTime(1000) //waits for silence, then emits
-	throttleTime(1000) //first emits, then causes silence
----0-------2-------4|
+---a---b---a---a---b|
+	distinctUntilChanged
+---a---b---a-------b|
 
 */
 
-var result = foo.throttleTime(1000);
+// var result = foo.distinct(
+// 	(x,y) => x.toLowerCase() === y.toLowerCase()
+// );
 
+var result = foo.distinctUntilChanged();
 result.subscribe(
 	function(x){ console.log('next '+x); },
 	function(err){ console.log('error '+err); },
