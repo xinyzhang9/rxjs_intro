@@ -1,15 +1,14 @@
-var foo = Rx.Observable.interval(100).take(5);
+var foo = Rx.Observable.interval(500).take(5);
 /*
 
 ---0---1---2---3---4|
-	debounceTime(1000) //waits for 1000 silence
------0---1---2---3---4|
+	debounceTime(1000) //waits for silence, then emits
+	throttleTime(1000) //first emits, then causes silence
+---0-------2-------4|
 
 */
 
-var result = foo.debounce(() =>
-	Rx.Observable.interval(1000).take(1)
-);
+var result = foo.throttleTime(1000);
 
 result.subscribe(
 	function(x){ console.log('next '+x); },
