@@ -1,5 +1,5 @@
 var foo = Rx.Observable.interval(500)
-	.zip(Rx.Observable.of('a','b','c','d',2), (x,y)=>y);
+	.zip(Rx.Observable.of('a','b','c','d'), (x,y)=>y);
 
 var bar = foo.map(x => x.toUpperCase());
 /*
@@ -16,7 +16,7 @@ var bar = foo.map(x => x.toUpperCase());
 // 	(x,y) => x.toLowerCase() === y.toLowerCase()
 // );
 
-var result =bar.retryWhen(errorObs => errorObs.delay(3000));
+var result =bar.repeat(3);
 result.subscribe(
 	function(x){ console.log('next '+x); },
 	function(err){ console.log('error '+err); },
