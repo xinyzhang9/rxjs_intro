@@ -1,12 +1,16 @@
 var observable = Rx.Observable.interval(1000).take(5);
 
+var subject = new Rx.Subject();
+
 var observableA = {
 	next: function(x){ console.log('A next '+x) },
 	error: function(err){ console.log('A error '+err); },
 	complete: function(){ console.log('A done');}
 };
 
-observable.subscribe(observableA);
+observable.subscribe(subject);
+
+subject.subscribe(observableA);
 
 var observableB = {
 	next: function(x){ console.log('B next '+x) },
@@ -15,5 +19,5 @@ var observableB = {
 };
 
 setTimeout(function(){
-	observable.subscribe(observableB)
+	subject.subscribe(observableB)
 },2000);
