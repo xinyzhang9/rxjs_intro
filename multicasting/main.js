@@ -1,5 +1,5 @@
 
-var subject = new Rx.BehaviorSubject(0);
+var subject = new Rx.ReplaySubject(100);
 
 var observableA = {
 	next: function(x){ console.log('A next '+x) },
@@ -16,12 +16,12 @@ var observableB = {
 	complete: function(){ console.log('B done');}
 };
 
-subject.next(1);
-subject.next(2);
-subject.next(3);
+setTimeout(()=> subject.next(1),100);
+setTimeout(()=> subject.next(2),200);
+setTimeout(()=> subject.next(3),300);
+setTimeout(()=> subject.complete(),350);
 
 
-// age vs birthdays
 /*
 0---1---2---3----------------
 	0..1...2...3...
@@ -31,4 +31,4 @@ subject.next(3);
 setTimeout(function(){
 	subject.subscribe(observableB);
 	console.log('observableB subscribed');
-},2000);
+},400);
