@@ -1,6 +1,5 @@
-var observable = Rx.Observable.interval(1000).take(5);
 
-var subject = new Rx.Subject();
+var subject = new Rx.BehaviorSubject(0);
 
 var observableA = {
 	next: function(x){ console.log('A next '+x) },
@@ -8,9 +7,8 @@ var observableA = {
 	complete: function(){ console.log('A done');}
 };
 
-observable.subscribe(subject);
-
 subject.subscribe(observableA);
+console.log('observableA subscribed');
 
 var observableB = {
 	next: function(x){ console.log('B next '+x) },
@@ -18,6 +16,19 @@ var observableB = {
 	complete: function(){ console.log('B done');}
 };
 
+subject.next(1);
+subject.next(2);
+subject.next(3);
+
+
+// age vs birthdays
+/*
+0---1---2---3----------------
+	0..1...2...3...
+						3.....
+*/
+
 setTimeout(function(){
-	subject.subscribe(observableB)
+	subject.subscribe(observableB);
+	console.log('observableB subscribed');
 },2000);
