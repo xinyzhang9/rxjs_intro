@@ -1,5 +1,9 @@
 
-var subject = new Rx.ReplaySubject(100);
+var subject = new Rx.AsyncSubject();
+
+// ReplaySubject: replays many, before or after completion
+// BehaviorSubject: replays one, only before completion
+// AsyncSubject: replays one, only if completed
 
 var observableA = {
 	next: function(x){ console.log('A next '+x) },
@@ -23,9 +27,9 @@ setTimeout(()=> subject.complete(),350);
 
 
 /*
-0---1---2---3----------------
-	0..1...2...3...
-						3.....
+0---1---2---3---|
+	............3|
+						3|
 */
 
 setTimeout(function(){
