@@ -5,6 +5,7 @@ const FETCH_USER_FULFILLED =  'FETCH_USER_FULFILLED';
 const FETCH_USER_REJECTED = 'FETCH_USER_REJECTED';
 const FETCH_USER_CANCELLED = 'FETCH_USER_CANCELLED';
 
+// action
 const fetchUser = id => ({ type: FETCH_USER, payload: id });
 const fetchUserFulfilled = payload => ({ type: FETCH_USER_FULFILLED, payload });
 const cancelFetchUser = ()=> ({ type: FETCH_USER_CANCELLED });
@@ -26,7 +27,7 @@ const fetchUserEpic = action$ =>
 				.takeUntil(action$.ofType(FETCH_USER_CANCELLED))
 		);
 
-// reducer
+// reducers
 const users = (state = {}, action) => {
 	switch(action.type){
 		case FETCH_USER:
@@ -53,3 +54,48 @@ const isFetchingUser = (state = false, action) => {
 	}
 };
 
+// start 
+const { combineReducers, createStore, applyMiddleware } = Redux;
+const { combineEpics, createEpicMiddleware } = ReduxObservable;
+
+const rootReducer = combineReducers({ users, isFetchingUser });
+
+const rootEpic = combineEpics(fetchUserEpic);
+
+const epicMiddleware = createEpicMiddleware(rootEpic);
+
+const store = createStore(rootReducer, applyMiddleware(epicMiddleware));
+
+const renderApp = ()=> {
+	const userId = 'xz';
+	const { users, isFetchingUser } = store.getState();
+	const user = users[userId] || '';
+
+	document.body.innerHTML = `
+		<div>
+			<h1>Fetch User </h1>
+			<button onclick = '(${()=>{
+				store.dispatch(fetchUser("xz"));
+			}})();'
+			>
+				Fetch User Info
+			</button>
+			<button onclick = '(${()=>{
+				store.dispatch(cancelFetchUser());
+			}})();'
+			>
+				Cancel
+			</button>
+
+			<span>${ isFetchingUser? 'Loading...' : '' }</span>
+			<div>
+				${ user && `
+					<textarea>${JSON.stringify(user, null, 2)}</textarea>
+				`}
+			</div>
+		</div>
+	`;
+};
+
+store.subscribe(renderApp);
+renderApp();
