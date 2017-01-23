@@ -27,9 +27,14 @@ let App = ({ isPinging, ping }) => (
 	</div>
 );
 
-App = connect(
-	({ isPinging }) => ({ isPinging }),{ ping }
-)(App);
+// connect(mapStateToProps, mapDispatchToProps)
+const mapStateToProps = (state) => ({ isPinging: state.isPinging });
+
+// App = connect(
+// 	({ isPinging }) => ({ isPinging }),{ ping }
+// )(App);
+
+App = connect(mapStateToProps, {ping})(App);
 
 const { Provider } = ReactRedux;
 const { createStore, applyMiddleware } = Redux;
